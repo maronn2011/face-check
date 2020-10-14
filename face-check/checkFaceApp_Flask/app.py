@@ -55,13 +55,11 @@ def check_answer():
         img.save(os.path.join(DIR,img.filename))
         name = os.path.join(DIR,img.filename)
         check = img_predict(name)
-        print(check)
         name_list = []
         for i in range(len(searchNameList)):
             face_per = searchNameList[i] + "顔である確率は" + str(check[i])
             name_list.append(face_per)
         os.remove(name)
-        print(name_list)
         return render_template('check.html',name_list=name_list)
         
 

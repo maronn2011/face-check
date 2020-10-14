@@ -16,8 +16,8 @@ nb_classes = len(classes)
 img_width, img_height = 150, 150
 
 # トレーニング用とバリデーション用の画像格納先（パスは自分で設定してください）
-train_data_dir = 'FaceEdited'
-validation_data_dir = 'test'
+train_data_dir = 'FaceEdited/'
+validation_data_dir = 'test/'
 
 #トレーニングデータ用の画像数
 nb_train_samples = 598
