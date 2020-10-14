@@ -1,0 +1,13 @@
+tensorflow
+keras
+Pillow
+matplotlib
+beautifulsoup4
+lxml
+urllib3 
+google_images_download
+opencv-python
+six 
+semidbm
+pykakasi
+flask
