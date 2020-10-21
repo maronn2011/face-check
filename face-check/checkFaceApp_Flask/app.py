@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*- 
-from flask import Flask,render_template,request,redirect
+import cv2
+import numpy as np
 import os
+from flask import Flask,render_template,request,redirect
 import datetime
 app = Flask(__name__)
-DIR = "static/img"
+DIR = "static/img/"
 
 import numpy as np
 from keras.models import load_model
@@ -38,8 +40,37 @@ def img_predict(filename):
 
     return pred
 
+# OpenCVのデフォルトの分類器のpath。(https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xmlのファイルを使う)
+cascade_path = '../cutFace_cascade/haarcascade_frontalface_default.xml'
+# 例
+#cascade_path = './opencv-master/data/haarcascades/haarcascade_frontalface_default.xml'
+faceCascade = cv2.CascadeClassifier(cascade_path)
 
 
+
+# 顔認識する対象を決定（検索ワードを入力）
+SearchName = os.listdir("../Original/")
+ImgNumber =100
+# CNNで学習するときの画像のサイズを設定（サイズが大きいと学習に時間がかかる）
+ImgSize=(250,250)
+input_shape=(250,250,3)
+
+
+
+
+def face_cut(filename):
+    img = cv2.imread(filename, cv2.IMREAD_COLOR)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    face = faceCascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=2)
+    if len(face) > 0:
+        for rect in face:
+            x = rect[0]
+            y = rect[1]
+            w = rect[2]
+            h = rect[3]
+            cv2.imwrite(filename,img[y:y+h,  x:x+w])
+    else:
+        print('image' + ':NoFace') 
 
 @app.route('/',methods=['GET','POST'])
 def check_img():
@@ -54,6 +85,8 @@ def check_answer():
         img = request.files['img']
         img.save(os.path.join(DIR,img.filename))
         name = os.path.join(DIR,img.filename)
+        print(name)
+        face_cut(name)
         check = img_predict(name)
         name_list = []
         for i in range(len(searchNameList)):
