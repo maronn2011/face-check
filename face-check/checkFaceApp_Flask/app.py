@@ -36,8 +36,6 @@ def img_predict(filename):
     pred = vgg_model.predict(x)[0]
     pred = pred*100
     #結果を表示する
-    
-
     return pred
 
 # OpenCVのデフォルトの分類器のpath。(https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xmlのファイルを使う)
@@ -57,7 +55,7 @@ input_shape=(250,250,3)
 
 
 
-
+# 画像内に顔の切り出しを行う関数
 def face_cut(filename):
     img = cv2.imread(filename, cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -82,13 +80,17 @@ def check_answer():
     if request.method == 'GET':
         return render_template('index.html')
     if request.method == 'POST':
+        # フォームからファイル情報を取得
         img = request.files['img']
+        # 画像を保存し、保存した画像の名前を取得
         img.save(os.path.join(DIR,img.filename))
         name = os.path.join(DIR,img.filename)
-        print(name)
+        # フォームからの画像を顔部分がある場合切り出しを行う
         face_cut(name)
+        # 学習済みモデルに読み込ませ一致具合の判定を行う
         check = img_predict(name)
         name_list = []
+        # 結果の出力
         for i in range(len(searchNameList)):
             face_per = searchNameList[i] + "顔である確率は" + str(check[i])
             name_list.append(face_per)
