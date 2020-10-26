@@ -94,7 +94,6 @@ def check_answer():
         for i in range(len(searchNameList)):
             face_per = searchNameList[i] + "顔である確率は" + str(check[i])
             name_list.append(face_per)
-        os.remove(name)
         return render_template('check.html',name_list=name_list)
         
 
